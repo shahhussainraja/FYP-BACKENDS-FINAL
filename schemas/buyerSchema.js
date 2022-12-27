@@ -17,7 +17,7 @@ const buyer = new mongodb.Schema({
     image: String
 })
  
-buyer.methods.generateHashedPassword = async function () {
+buyer.methods.generateHashedPassword = async function() {
     try {
       //encryption of password
       let salt = await bcrypt.genSalt(10);

@@ -5,27 +5,40 @@ const upload = require("../middleWare/multer");
 const resize = require('../middleWare/resize');
 const buyerCollection  = require("../schemas/buyerSchema")
 
-router.post("/signUpAsBuyer",async(req,res)=>{
+
+
+router.post('/signUpAsBuyer', upload.single('image'), async(req,res)=>{
   try{
+
     let data = await buyerCollection.findOne({email : req.body.email})
     if(data) return res.status(400).send("User already Exist"); 
 
-      const buyer = new buyerCollection
-      buyer.name = req.body.name,
-      buyer.email = req.body.email,
-      buyer.phone = req.body.phone,
-      buyer.image = req.body.image,
-      buyer.password = req.body.password,
-      await buyer.generateHashedPassword();
+    const imagePath = path.join(__dirname, '../public/images');
+    const fileUpload = new resize(imagePath);
+    if (!req.file) 
+     return res.status(401).json({error: 'Please provide an image'});
+  
+    const filename = await fileUpload.save(req.file.buffer);
 
-      await buyer.save();
-      res.status(200).send(true)
+    const buyer = new buyerCollection
+    buyer.name = req.body.name,
+    buyer.email = req.body.email,
+    buyer.phone = req.body.phone,
+    buyer.image = filename,
+    buyer.password = req.body.password,
+    await buyer.generateHashedPassword();
+    buyer.save();
+
+    res.status(200).send(buyer + " Saved")
 
   }catch(err){
-    console.log("buyerRoutePostError " + err.message)
-    return res.status(400).send(err.message)
+    console.log(err.message);
+    res.status(400).send(err.messsage);
   }
-})
+});
+
+
+
 
   router.get("/buyerDetail/:buyerId", async(req,res)=>{
    try{
@@ -39,25 +52,6 @@ router.post("/signUpAsBuyer",async(req,res)=>{
     res.status(400).send(err.message)
   }
   })
-
-  router.post('/profileImage', upload.single('image'), async function (req, res) {
-    try{
-      const imagePath = path.join(__dirname, '../public/images');
-      const fileUpload = new resize(imagePath);
-      if (!req.file) {
-       return res.status(401).json({error: 'Please provide an image'});
-      }
-      const filename = await fileUpload.save(req.file.buffer);
-      return res.status(200).json({ path: filename });
-
-    }catch(err){
-      console.log(err.message)
-      res.status(400).send(err.messsage)
-    }
-  });
-
-
-
 
 
 
