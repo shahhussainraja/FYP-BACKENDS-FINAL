@@ -24,7 +24,7 @@ router.post('/signUpAsBuyer', upload.single('image'), async(req,res)=>{
     buyer.name = req.body.name,
     buyer.email = req.body.email,
     buyer.phone = req.body.phone,
-    buyer.image = "http://localhost:3000/images/"+filename,
+    buyer.image = "/images/"+filename,
     buyer.password = req.body.password,
     await buyer.generateHashedPassword();
     buyer.save();

@@ -11,6 +11,7 @@ require('dotenv').config({path: __dirname + '/.env'})
 
 //Routes is followign 
 var buyerRouter = require('./routes/buyerRoutes');
+var postRouter = require('./routes/postRoutes');
 
 var app = express();
 
@@ -35,6 +36,7 @@ mongodb.connect(process.env.db_Connection, { useNewUrlParser: true })
 
 
 app.use('/bespoke', buyerRouter);
+app.use('/bespoke', postRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
