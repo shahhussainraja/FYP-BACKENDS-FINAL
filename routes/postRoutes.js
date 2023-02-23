@@ -7,10 +7,8 @@ const postCollection  = require("../schemas/postSchema")
 var bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 
-
 router.post("/uploadPost",upload.single("image"),async(req, res)=>{
     try{
-
     const imagePath = path.join(__dirname, '../public/images');
     const fileUpload = new resize(imagePath);
     if (!req.file) 
@@ -30,12 +28,10 @@ router.post("/uploadPost",upload.single("image"),async(req, res)=>{
     console.log(post + " Saved")
     res.status(200).send(post + " Saved")
 
-
     }catch(err){
         console.log(err.message);
         res.status(400).send(err.message)
     }
-
 })
 
 router.get("/getAllPost",async(req,res)=>{
@@ -45,20 +41,9 @@ router.get("/getAllPost",async(req,res)=>{
             return res.status(400).send("No post found")
         
         return res.status(200).send(data)
-
     }catch(err){
-
-
     }
 
-
-
 }) 
-
-
-
-
-
-
-
+ 
 module.exports = router
